@@ -29,10 +29,13 @@ export function AuthProvider({ children }) {
 
   const loginWithGoogle = async () => {
     setError(null);
+    // Use REACT_APP_SITE_URL in production so redirect goes to deployed URL, not localhost
+    const redirectTo =
+      process.env.REACT_APP_SITE_URL || `${window.location.origin}`;
     const { error: err } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/`,
+        redirectTo: `${redirectTo.replace(/\/$/, '')}/`,
       },
     });
     if (err) setError(err.message);
