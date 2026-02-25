@@ -1,25 +1,52 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { Box, Spinner, Center } from '@chakra-ui/react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { EmailTrackerProvider } from './context/EmailTrackerContext';
+import AppHeader from './components/AppHeader';
+import Login from './components/Login';
+import TrackerPage from './pages/TrackerPage';
+import JobsPage from './pages/JobsPage';
 
-function App() {
+function AuthenticatedApp() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <EmailTrackerProvider>
+      <BrowserRouter>
+        <Box minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }}>
+          <AppHeader />
+          <Routes>
+            <Route path="/" element={<TrackerPage />} />
+            <Route path="/tracker" element={<TrackerPage />} />
+            <Route path="/jobs" element={<JobsPage />} />
+          </Routes>
+        </Box>
+      </BrowserRouter>
+    </EmailTrackerProvider>
   );
 }
 
-export default App;
+function AppContent() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <Center minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }}>
+        <Spinner size="xl" colorScheme="teal" />
+      </Center>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
+
+  return <AuthenticatedApp />;
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
+    </AuthProvider>
+  );
+}
