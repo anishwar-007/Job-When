@@ -119,10 +119,9 @@ export default function Login() {
         <Container maxW="md">
           <Box
             bg="white"
-            _dark={{ bg: 'gray.800' }}
             borderRadius="2xl"
             boxShadow="2xl"
-            _dark={{ boxShadow: 'dark-lg', borderWidth: '1px', borderColor: 'gray.700' }}
+            _dark={{ bg: 'gray.800', boxShadow: 'dark-lg', borderWidth: '1px', borderColor: 'gray.700' }}
             p={8}
           >
             <VStack spacing={7} align="stretch">
@@ -154,14 +153,18 @@ export default function Login() {
                 color="gray.800"
                 borderWidth="1px"
                 borderColor="gray.300"
-                _dark={{ bg: 'gray.700', color: 'white', borderColor: 'gray.600' }}
                 _hover={{
                   bg: 'gray.50',
-                  _dark: { bg: 'gray.600' },
                   borderColor: 'gray.400',
-                  _dark: { borderColor: 'gray.500' },
                 }}
-                _active={{ bg: 'gray.100', _dark: { bg: 'gray.500' } }}
+                _active={{ bg: 'gray.100' }}
+                _dark={{
+                  bg: 'gray.700',
+                  color: 'white',
+                  borderColor: 'gray.600',
+                  _hover: { bg: 'gray.600', borderColor: 'gray.500' },
+                  _active: { bg: 'gray.500' },
+                }}
               >
                 Sign in with Google
               </Button>
