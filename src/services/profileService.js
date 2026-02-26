@@ -64,11 +64,11 @@ export async function uploadResume(file) {
 
 export async function getResumeViewUrl() {
   const { data: profile, error: profileError } = await getProfile();
-  if (profileError || !profile?.data?.resumePath) return { data: null, error: profileError || new Error('No resume') };
+  if (profileError || !profile?.resumePath) return { data: null, error: profileError || new Error('No resume') };
 
   const { data, error } = await supabase.storage
     .from(BUCKET)
-    .createSignedUrl(profile.data.resumePath, SIGNED_URL_EXPIRY);
+    .createSignedUrl(profile.resumePath, SIGNED_URL_EXPIRY);
 
   if (error) return { data: null, error };
   return { data: data.signedUrl, error: null };
