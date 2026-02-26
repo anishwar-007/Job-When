@@ -27,20 +27,21 @@ export default function ResumeManager() {
   const fileInputRef = useRef(null);
   const toast = useToast();
 
-  const loadProfile = async () => {
-    setLoading(true);
-    const { data, error } = await profileService.getProfile();
-    setLoading(false);
-    if (error) {
-      toast({ title: error.message || 'Failed to load profile', status: 'error', isClosable: true });
-      return;
-    }
-    setProfile(data);
-  };
-
   useEffect(() => {
-    if (isOpen) loadProfile();
-  }, [isOpen]);
+    if (!isOpen) return;
+    let cancelled = false;
+    setLoading(true);
+    profileService.getProfile().then(({ data, error }) => {
+      if (cancelled) return;
+      setLoading(false);
+      if (error) {
+        toast({ title: error.message || 'Failed to load profile', status: 'error', isClosable: true });
+        return;
+      }
+      setProfile(data);
+    });
+    return () => { cancelled = true; };
+  }, [isOpen, toast]);
 
   const handleFileChange = async (e) => {
     const file = e.target.files?.[0];
