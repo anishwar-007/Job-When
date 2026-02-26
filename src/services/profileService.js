@@ -62,14 +62,17 @@ export async function uploadResume(file) {
   };
 }
 
-export async function getResumeViewUrl() {
+export async function getResumeViewUrl(expirySeconds = SIGNED_URL_EXPIRY) {
   const { data: profile, error: profileError } = await getProfile();
   if (profileError || !profile?.resumePath) return { data: null, error: profileError || new Error('No resume') };
 
   const { data, error } = await supabase.storage
     .from(BUCKET)
-    .createSignedUrl(profile.resumePath, SIGNED_URL_EXPIRY);
+    .createSignedUrl(profile.resumePath, expirySeconds);
 
   if (error) return { data: null, error };
   return { data: data.signedUrl, error: null };
 }
+
+/** 24 hours - for including resume link in outgoing emails */
+export const RESUME_LINK_EXPIRY_EMAIL = 86400;

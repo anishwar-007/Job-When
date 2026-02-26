@@ -21,6 +21,7 @@ import {
 import { ViewIcon, CopyIcon, EmailIcon } from '@chakra-ui/icons';
 import StatusSelect from './StatusSelect';
 import { useEmailTracker } from '../context/EmailTrackerContext';
+import ComposeEmailModal from './ComposeEmailModal';
 
 function isJobLink(value) {
   return (value || '').startsWith('http://') || (value || '').startsWith('https://');
@@ -38,6 +39,7 @@ export default function EmailCard({ email, onEdit }) {
   const linkJob = jobValue && isJobLink(jobValue);
   const [showContent, setShowContent] = useState(false);
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const { isOpen: isComposeOpen, onOpen: onComposeOpen, onClose: onComposeClose } = useDisclosure();
   const cancelRef = React.useRef(null);
   const toast = useToast();
 
@@ -77,10 +79,7 @@ export default function EmailCard({ email, onEdit }) {
       toast({ title: 'Add HR email address in Details before sending', status: 'error', duration: 3000, isClosable: true });
       return;
     }
-    const subject = email.emailHeader ? encodeURIComponent(email.emailHeader) : '';
-    const body = email.emailContent ? encodeURIComponent(email.emailContent) : '';
-    const mailto = `mailto:${email.email}${subject ? `?subject=${subject}` : ''}${body ? `${subject ? '&' : '?'}body=${body}` : ''}`;
-    window.location.href = mailto;
+    onComposeOpen();
   };
 
   return (
@@ -220,6 +219,14 @@ export default function EmailCard({ email, onEdit }) {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+
+      <ComposeEmailModal
+        isOpen={isComposeOpen}
+        onClose={onComposeClose}
+        to={email.email || ''}
+        subject={email.emailHeader || ''}
+        body={email.emailContent || ''}
+      />
     </>
   );
 }
