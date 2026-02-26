@@ -18,7 +18,7 @@ import {
   AlertDialogOverlay,
   useToast,
 } from '@chakra-ui/react';
-import { ViewIcon, CopyIcon } from '@chakra-ui/icons';
+import { ViewIcon, CopyIcon, EmailIcon } from '@chakra-ui/icons';
 import StatusSelect from './StatusSelect';
 import { useEmailTracker } from '../context/EmailTrackerContext';
 
@@ -71,6 +71,18 @@ export default function EmailCard({ email, onEdit }) {
     }
   };
 
+  const handleSendMail = (e) => {
+    e.stopPropagation();
+    if (!email.email || !email.email.trim()) {
+      toast({ title: 'Add HR email address in Details before sending', status: 'error', duration: 3000, isClosable: true });
+      return;
+    }
+    const subject = email.emailHeader ? encodeURIComponent(email.emailHeader) : '';
+    const body = email.emailContent ? encodeURIComponent(email.emailContent) : '';
+    const mailto = `mailto:${email.email}${subject ? `?subject=${subject}` : ''}${body ? `${subject ? '&' : '?'}body=${body}` : ''}`;
+    window.location.href = mailto;
+  };
+
   return (
     <>
       <Box
@@ -119,6 +131,17 @@ export default function EmailCard({ email, onEdit }) {
             <StatusSelect emailId={email.id} value={email.status} />
           </Box>
           <Flex gap={2} shrink={0} onClick={(e) => e.stopPropagation()}>
+            {email.status === 'Mail ready' && (
+              <Button
+                size="sm"
+                colorScheme="teal"
+                leftIcon={<EmailIcon />}
+                onClick={handleSendMail}
+                title="Open default mail app to send email to HR"
+              >
+                Send the mail
+              </Button>
+            )}
             <Button
               size="sm"
               variant="outline"

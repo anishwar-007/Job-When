@@ -26,6 +26,7 @@ const emptyRecord = {
   phone: '',
   hasEmail: true,
   jobId: '',
+  emailHeader: '',
   emailContent: '',
   status: 'Just added',
 };
@@ -44,6 +45,7 @@ export default function EmailForm({ isOpen, onClose, editRecord = null }) {
         phone: editRecord.phone || '',
         hasEmail: editRecord.hasEmail !== false,
         jobId: editRecord.jobId || '',
+        emailHeader: editRecord.emailHeader || '',
         emailContent: editRecord.emailContent || '',
         status: editRecord.status || 'Just added',
       });
@@ -154,6 +156,14 @@ export default function EmailForm({ isOpen, onClose, editRecord = null }) {
                     </option>
                   ))}
                 </Select>
+              </FormControl>
+              <FormControl>
+                <FormLabel>Email header (subject line)</FormLabel>
+                <Input
+                  value={form.emailHeader}
+                  onChange={(e) => handleChange('emailHeader', e.target.value)}
+                  placeholder="e.g. Application for Software Engineer role"
+                />
               </FormControl>
               <FormControl>
                 <FormLabel>Email content (what you sent)</FormLabel>

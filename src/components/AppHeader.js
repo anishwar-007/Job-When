@@ -3,6 +3,7 @@ import { Box, Button, Container, HStack, Link as ChakraLink } from '@chakra-ui/r
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AppIcon from './AppIcon';
+import ResumeManager from './ResumeManager';
 
 export default function AppHeader() {
   const location = useLocation();
@@ -42,9 +43,12 @@ export default function AppHeader() {
             Jobs
           </ChakraLink>
           </HStack>
-          <Button size="sm" variant="outline" onClick={logout}>
-            Log out
-          </Button>
+          <HStack spacing={2}>
+            <ResumeManager />
+            <Button size="sm" variant="outline" onClick={logout}>
+              Log out
+            </Button>
+          </HStack>
         </HStack>
       </Container>
     </Box>
