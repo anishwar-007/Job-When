@@ -18,7 +18,7 @@ import {
   AlertDialogOverlay,
   useToast,
 } from '@chakra-ui/react';
-import { ViewIcon } from '@chakra-ui/icons';
+import { ViewIcon, CopyIcon } from '@chakra-ui/icons';
 import StatusSelect from './StatusSelect';
 import { useEmailTracker } from '../context/EmailTrackerContext';
 
@@ -51,6 +51,23 @@ export default function EmailCard({ email, onEdit }) {
     if (ok) {
       onDeleteClose();
       toast({ title: 'Removed', status: 'info', duration: 2000, isClosable: true });
+    }
+  };
+
+  const handleCopy = async (e) => {
+    e.stopPropagation();
+    const payload = {
+      'Hr name': email.hrName || '',
+      'company name': email.companyName || '',
+      'Job link': email.jobId || jobValue || '',
+      'email': email.email || '',
+    };
+    const text = JSON.stringify(payload, null, 2);
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({ title: 'Copied to clipboard', status: 'success', duration: 2000, isClosable: true });
+    } catch {
+      toast({ title: 'Copy failed', status: 'error', duration: 2000, isClosable: true });
     }
   };
 
@@ -102,6 +119,15 @@ export default function EmailCard({ email, onEdit }) {
             <StatusSelect emailId={email.id} value={email.status} />
           </Box>
           <Flex gap={2} shrink={0} onClick={(e) => e.stopPropagation()}>
+            <Button
+              size="sm"
+              variant="outline"
+              leftIcon={<CopyIcon />}
+              onClick={handleCopy}
+              title="Copy HR name, company, job link, email as JSON"
+            >
+              Copy
+            </Button>
             <Button
               size="sm"
               variant="outline"
