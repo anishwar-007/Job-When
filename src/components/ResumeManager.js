@@ -79,10 +79,10 @@ export default function ResumeManager() {
       </Button>
       <Modal isOpen={isOpen} onClose={onClose} size="md">
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>My resume</ModalHeader>
+        <ModalContent maxH="90vh" display="flex" flexDirection="column">
+          <ModalHeader flexShrink={0}>My resume</ModalHeader>
           <ModalCloseButton />
-          <ModalBody>
+          <ModalBody overflowY="auto" flex="1" minH={0}>
             {loading ? (
               <Text color="gray.500">Loading…</Text>
             ) : (
@@ -122,7 +122,7 @@ export default function ResumeManager() {
               </VStack>
             )}
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter flexShrink={0}>
             <Button variant="ghost" onClick={onClose}>
               Close
             </Button>

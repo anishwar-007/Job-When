@@ -72,11 +72,11 @@ export default function EmailForm({ isOpen, onClose, editRecord = null }) {
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="lg" scrollBehavior="inside">
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{isEditing ? 'Edit email' : 'Add email'}</ModalHeader>
+      <ModalContent maxH="90vh" display="flex" flexDirection="column">
+        <ModalHeader flexShrink={0}>{isEditing ? 'Edit email' : 'Add email'}</ModalHeader>
         <ModalCloseButton />
-        <form onSubmit={handleSubmit}>
-          <ModalBody>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', minHeight: 0, flex: 1 }}>
+          <ModalBody overflowY="auto" flex="1" minH={0} py={4}>
             <VStack spacing={4} align="stretch">
               <FormControl isRequired>
                 <FormLabel>HR name</FormLabel>
@@ -176,7 +176,7 @@ export default function EmailForm({ isOpen, onClose, editRecord = null }) {
               </FormControl>
             </VStack>
           </ModalBody>
-          <ModalFooter>
+          <ModalFooter flexShrink={0}>
             <Button variant="ghost" mr={3} onClick={onClose}>
               Cancel
             </Button>
