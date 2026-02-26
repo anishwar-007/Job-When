@@ -7,9 +7,14 @@ module.exports = async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const from = process.env.RESEND_FROM || 'Offer When <onboarding@resend.dev>';
   if (!process.env.RESEND_API_KEY) {
     return res.status(500).json({ error: 'Email service not configured (RESEND_API_KEY)' });
+  }
+  const from = process.env.RESEND_FROM;
+  if (!from || !from.trim()) {
+    return res.status(500).json({
+      error: 'Set RESEND_FROM to your verified email (e.g. Your Name <you@gmail.com>). Verify it in the Resend dashboard.',
+    });
   }
 
   try {
