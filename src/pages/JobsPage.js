@@ -51,7 +51,16 @@ export default function JobsPage() {
 
   if (loading) {
     return (
-      <Box minH="100vh" py={6} px={4} bg="gray.50" _dark={{ bg: 'gray.900' }} display="flex" justifyContent="center" alignItems="center">
+      <Box
+        minH="100vh"
+        py={6}
+        px={4}
+        bg="linear-gradient(160deg, #f0fdfa 0%, #e0f2fe 50%, #f8fafc 100%)"
+        _dark={{ bg: 'linear-gradient(160deg, #0f172a 0%, #134e4a 50%, #0c4a6e 100%)' }}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
         <Spinner size="xl" colorScheme="teal" />
       </Box>
     );
@@ -59,7 +68,13 @@ export default function JobsPage() {
 
   if (!normalized.length) {
     return (
-      <Box minH="100vh" py={6} px={4} bg="gray.50" _dark={{ bg: 'gray.900' }}>
+      <Box
+        minH="100vh"
+        py={6}
+        px={4}
+        bg="linear-gradient(160deg, #f0fdfa 0%, #e0f2fe 40%, #f8fafc 100%)"
+        _dark={{ bg: 'linear-gradient(160deg, #0f172a 0%, #134e4a 50%, #0c4a6e 100%)' }}
+      >
         <Container maxW="4xl">
           <Heading size="lg" mb={6}>
             Jobs
@@ -77,11 +92,14 @@ export default function JobsPage() {
           <Box
             p={8}
             textAlign="center"
-            borderWidth="1px"
-            borderRadius="md"
+            borderWidth="2px"
+            borderRadius="lg"
             borderStyle="dashed"
-            bg="gray.50"
+            borderColor="teal.200"
+            _dark={{ borderColor: 'teal.600' }}
+            bg="white"
             _dark={{ bg: 'gray.800' }}
+            boxShadow="sm"
           >
             <Text color="gray.500" _dark={{ color: 'gray.400' }}>
               No jobs yet. Add job IDs or links from the Tracker page (Manage Job IDs / Links).
@@ -93,11 +111,17 @@ export default function JobsPage() {
   }
 
   return (
-    <Box minH="100vh" py={6} px={4} bg="gray.50" _dark={{ bg: 'gray.900' }}>
+    <Box
+      minH="100vh"
+      py={6}
+      px={4}
+      bg="linear-gradient(160deg, #f0fdfa 0%, #e0f2fe 30%, #f8fafc 70%, #ecfdf5 100%)"
+      _dark={{ bg: 'linear-gradient(160deg, #0f172a 0%, #134e4a 35%, #0c4a6e 65%, #14532d 100%)' }}
+    >
       <Container maxW="4xl">
         <VStack align="stretch" spacing={6}>
           {error && (
-            <Alert status="error" borderRadius="md">
+            <Alert status="error" borderRadius="lg" boxShadow="md">
               <AlertIcon />
               <AlertTitle>Error</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
@@ -106,7 +130,9 @@ export default function JobsPage() {
               </Button>
             </Alert>
           )}
-          <Heading size="lg">Jobs</Heading>
+          <Heading size="lg" bgGradient="linear(to-r, teal.600, cyan.600)" _dark={{ bgGradient: 'linear(to-r, teal.300, cyan.300)' }} bgClip="text">
+            Jobs
+          </Heading>
 
           <HStack spacing={2} flexWrap="wrap">
             <Text fontSize="sm" fontWeight="medium" color="gray.600" _dark={{ color: 'gray.400' }}>
@@ -134,9 +160,14 @@ export default function JobsPage() {
                   key={job.value}
                   p={4}
                   borderWidth="1px"
-                  borderRadius="md"
-                  bg="gray.50"
+                  borderRadius="lg"
+                  bg="white"
                   _dark={{ bg: 'gray.800' }}
+                  borderColor="teal.100"
+                  _dark={{ borderColor: 'teal.800' }}
+                  boxShadow="sm"
+                  _hover={{ boxShadow: 'md', borderColor: 'teal.200', _dark: { borderColor: 'teal.600' } }}
+                  transition="all 0.2s"
                   display="flex"
                   alignItems="center"
                   justifyContent="space-between"

@@ -12,7 +12,11 @@ function AuthenticatedApp() {
   return (
     <EmailTrackerProvider>
       <BrowserRouter>
-        <Box minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }}>
+        <Box
+          minH="100vh"
+          bg="linear-gradient(160deg, #f0fdfa 0%, #e0f2fe 30%, #f8fafc 60%, #f0fdf4 100%)"
+          _dark={{ bg: 'linear-gradient(160deg, #0f172a 0%, #134e4a 40%, #0c4a6e 70%, #14532d 100%)' }}
+        >
           <AppHeader />
           <Routes>
             <Route path="/" element={<TrackerPage />} />
@@ -30,7 +34,11 @@ function AppContent() {
 
   if (loading) {
     return (
-      <Center minH="100vh" bg="gray.50" _dark={{ bg: 'gray.900' }}>
+      <Center
+        minH="100vh"
+        bg="linear-gradient(160deg, #f0fdfa 0%, #e0f2fe 50%, #f8fafc 100%)"
+        _dark={{ bg: 'linear-gradient(160deg, #0f172a 0%, #134e4a 50%, #0c4a6e 100%)' }}
+      >
         <Spinner size="xl" colorScheme="teal" />
       </Center>
     );

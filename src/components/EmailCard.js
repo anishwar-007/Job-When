@@ -28,13 +28,14 @@ import { ViewIcon, CopyIcon, EmailIcon } from '@chakra-ui/icons';
 import StatusSelect from './StatusSelect';
 import { useEmailTracker } from '../context/EmailTrackerContext';
 import ComposeEmailModal from './ComposeEmailModal';
+import EditNotesModal from './EditNotesModal';
 
 function isJobLink(value) {
   return (value || '').startsWith('http://') || (value || '').startsWith('https://');
 }
 
 export default function EmailCard({ email, onEdit }) {
-  const { jobIds, removeEmail, toggleCheck } = useEmailTracker();
+  const { jobIds, removeEmail, toggleCheck, updateEmail } = useEmailTracker();
   const job = email.jobId
     ? jobIds.find((j) => (typeof j === 'string' ? j : j.value) === email.jobId)
     : null;
@@ -46,6 +47,7 @@ export default function EmailCard({ email, onEdit }) {
   const [showContent, setShowContent] = useState(false);
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isComposeOpen, onOpen: onComposeOpen, onClose: onComposeClose } = useDisclosure();
+  const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
   const cancelRef = React.useRef(null);
   const toast = useToast();
 
@@ -79,6 +81,11 @@ export default function EmailCard({ email, onEdit }) {
     }
   };
 
+  const handleSaveNotes = (newNotes) => {
+    updateEmail(email.id, { ...email, notes: newNotes });
+    toast({ title: 'Note saved', status: 'success', duration: 2000, isClosable: true });
+  };
+
   const handleSendMail = (e) => {
     e.stopPropagation();
     if (!email.email || !email.email.trim()) {
@@ -95,14 +102,17 @@ export default function EmailCard({ email, onEdit }) {
           <Box
             p={4}
             borderWidth="1px"
-            borderRadius="md"
-            bg={email.isChecked ? 'gray.100' : 'gray.50'}
+            borderRadius="lg"
+            bg={email.isChecked ? 'gray.100' : 'white'}
             _dark={{ bg: email.isChecked ? 'gray.700' : 'gray.800' }}
+            borderColor="teal.100"
+            _dark={{ borderColor: 'teal.800' }}
+            boxShadow="sm"
             opacity={email.isChecked ? 0.85 : 1}
-            transition="opacity 0.2s"
+            transition="all 0.2s"
             cursor="pointer"
             onClick={handleCardClick}
-            _hover={{ shadow: 'md' }}
+            _hover={{ boxShadow: 'md', borderColor: 'teal.200', _dark: { borderColor: 'teal.600' } }}
           >
         <Flex align="center" gap={3} flexWrap="wrap">
           <Box onClick={(e) => e.stopPropagation()}>
@@ -205,13 +215,31 @@ export default function EmailCard({ email, onEdit }) {
         )}
           </Box>
         </PopoverTrigger>
-        <PopoverContent width="320px" maxW="90vw" _focus={{ outline: 'none' }}>
-          <PopoverArrow />
-          <PopoverHeader fontWeight="semibold" fontSize="sm">
+        <PopoverContent
+          width="320px"
+          maxW="90vw"
+          _focus={{ outline: 'none' }}
+          bg="linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #99f6e4 100%)"
+          _dark={{ bg: 'linear-gradient(135deg, #134e4a 0%, #0f766e 50%, #0d9488 100%)' }}
+          borderWidth="2px"
+          borderColor="teal.300"
+          _dark={{ borderColor: 'teal.500' }}
+          boxShadow="lg"
+        >
+          <PopoverArrow bg="teal.100" _dark={{ bg: 'teal.600' }} />
+          <PopoverHeader
+            fontWeight="semibold"
+            fontSize="sm"
+            color="teal.800"
+            _dark={{ color: 'teal.100' }}
+            borderBottomWidth="1px"
+            borderColor="teal.200"
+            _dark={{ borderColor: 'teal.600' }}
+          >
             Notes
           </PopoverHeader>
           <PopoverBody>
-            <Text fontSize="sm" whiteSpace="pre-wrap" color="gray.700" _dark={{ color: 'gray.300' }}>
+            <Text fontSize="sm" whiteSpace="pre-wrap" color="teal.900" _dark={{ color: 'teal.50' }}>
               {email.notes?.trim() || 'No notes yet.'}
             </Text>
             <Button
@@ -221,9 +249,9 @@ export default function EmailCard({ email, onEdit }) {
               mt={3}
               w="full"
               leftIcon={<ViewIcon />}
-              onClick={(e) => { e.stopPropagation(); onEdit(email); }}
+              onClick={(e) => { e.stopPropagation(); onNotesOpen(); }}
             >
-              Edit notes & details
+              Edit note
             </Button>
           </PopoverBody>
         </PopoverContent>
@@ -258,6 +286,13 @@ export default function EmailCard({ email, onEdit }) {
         to={email.email || ''}
         subject={email.emailHeader || ''}
         body={email.emailContent || ''}
+      />
+      <EditNotesModal
+        isOpen={isNotesOpen}
+        onClose={onNotesClose}
+        contactName={email.hrName}
+        notes={email.notes || ''}
+        onSave={handleSaveNotes}
       />
     </>
   );

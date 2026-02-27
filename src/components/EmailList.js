@@ -8,13 +8,16 @@ export default function EmailList({ emails, onEdit, columns = 1 }) {
       <Box
         p={8}
         textAlign="center"
-        borderWidth="1px"
-        borderRadius="md"
+        borderWidth="2px"
+        borderRadius="lg"
         borderStyle="dashed"
-        bg="gray.50"
+        borderColor="teal.200"
+        _dark={{ borderColor: 'teal.600' }}
+        bg="white"
         _dark={{ bg: 'gray.800' }}
+        boxShadow="sm"
       >
-        <Text color="gray.500" _dark={{ color: 'gray.400' }}>
+        <Text color="gray.600" _dark={{ color: 'gray.400' }}>
           No emails yet. Click &quot;Add email&quot; to track your first HR email.
         </Text>
       </Box>

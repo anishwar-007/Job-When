@@ -55,7 +55,17 @@ export default function JobIdManager() {
         Manage Job IDs / Links
       </Button>
       <Collapse in={isOpen} animateOpacity>
-        <Box mt={2} p={4} borderWidth="1px" borderRadius="md" bg="gray.50" _dark={{ bg: 'gray.800' }}>
+        <Box
+          mt={2}
+          p={4}
+          borderWidth="1px"
+          borderRadius="lg"
+          borderColor="teal.100"
+          _dark={{ borderColor: 'teal.800' }}
+          bg="white"
+          _dark={{ bg: 'gray.800' }}
+          boxShadow="sm"
+        >
           <Heading size="sm" mb={3}>
             Job IDs / Job links
           </Heading>

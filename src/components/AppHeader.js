@@ -12,7 +12,15 @@ export default function AppHeader() {
   const isJobs = location.pathname === '/jobs';
 
   return (
-    <Box borderBottomWidth="1px" bg="white" _dark={{ bg: 'gray.800' }} py={3}>
+    <Box
+      borderBottomWidth="2px"
+      borderColor="teal.200"
+      _dark={{ borderColor: 'teal.700' }}
+      bg="linear-gradient(90deg, #ffffff 0%, #f0fdfa 100%)"
+      _dark={{ bg: 'linear-gradient(90deg, #1e293b 0%, #0f766e 50%, #134e4a 100%)' }}
+      py={3}
+      boxShadow="sm"
+    >
       <Container maxW="6xl">
         <HStack spacing={6} justify="space-between">
           <HStack spacing={6}>
