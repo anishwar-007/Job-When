@@ -10,6 +10,7 @@ export default function AppHeader() {
   const { logout } = useAuth();
   const isTracker = location.pathname === '/' || location.pathname === '/tracker';
   const isJobs = location.pathname === '/jobs';
+  const isContacts = location.pathname === '/contacts';
 
   return (
     <Box
@@ -48,6 +49,17 @@ export default function AppHeader() {
             _hover={{ color: 'teal.500', textDecoration: 'none' }}
           >
             Jobs
+          </ChakraLink>
+          <ChakraLink
+            as={RouterLink}
+            to="/contacts"
+            fontWeight="bold"
+            fontSize="lg"
+            color={isContacts ? 'teal.600' : 'gray.600'}
+            _dark={{ color: isContacts ? 'teal.300' : 'gray.400' }}
+            _hover={{ color: 'teal.500', textDecoration: 'none' }}
+          >
+            HR Contacts
           </ChakraLink>
           </HStack>
           <HStack spacing={2}>

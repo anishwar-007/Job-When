@@ -7,6 +7,7 @@ import AppHeader from './components/AppHeader';
 import Login from './components/Login';
 import TrackerPage from './pages/TrackerPage';
 import JobsPage from './pages/JobsPage';
+import HRContactsPage from './pages/HRContactsPage';
 
 function AuthenticatedApp() {
   return (
@@ -22,6 +23,7 @@ function AuthenticatedApp() {
             <Route path="/" element={<TrackerPage />} />
             <Route path="/tracker" element={<TrackerPage />} />
             <Route path="/jobs" element={<JobsPage />} />
+            <Route path="/contacts" element={<HRContactsPage />} />
           </Routes>
         </Box>
       </BrowserRouter>

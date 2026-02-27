@@ -8,6 +8,7 @@ import {
   Tag,
   TagLabel,
   Text,
+  Textarea,
   useDisclosure,
   Collapse,
   AlertDialog,
@@ -17,18 +18,11 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverArrow,
 } from '@chakra-ui/react';
-import { ViewIcon, CopyIcon, EmailIcon } from '@chakra-ui/icons';
+import { EditIcon, CopyIcon, EmailIcon } from '@chakra-ui/icons';
 import StatusSelect from './StatusSelect';
 import { useEmailTracker } from '../context/EmailTrackerContext';
 import ComposeEmailModal from './ComposeEmailModal';
-import EditNotesModal from './EditNotesModal';
 
 function isJobLink(value) {
   return (value || '').startsWith('http://') || (value || '').startsWith('https://');
@@ -45,9 +39,10 @@ export default function EmailCard({ email, onEdit }) {
     : email.jobId;
   const linkJob = jobValue && isJobLink(jobValue);
   const [showContent, setShowContent] = useState(false);
+  const [editingNotes, setEditingNotes] = useState(false);
+  const [draftNotes, setDraftNotes] = useState('');
   const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
   const { isOpen: isComposeOpen, onOpen: onComposeOpen, onClose: onComposeClose } = useDisclosure();
-  const { isOpen: isNotesOpen, onOpen: onNotesOpen, onClose: onNotesClose } = useDisclosure();
   const cancelRef = React.useRef(null);
   const toast = useToast();
 
@@ -81,8 +76,23 @@ export default function EmailCard({ email, onEdit }) {
     }
   };
 
-  const handleSaveNotes = (newNotes) => {
-    updateEmail(email.id, { ...email, notes: newNotes });
+  const startEditNotes = (e) => {
+    e.stopPropagation();
+    setDraftNotes(email.notes || '');
+    setEditingNotes(true);
+  };
+
+  const cancelEditNotes = (e) => {
+    e?.stopPropagation();
+    setEditingNotes(false);
+    setDraftNotes('');
+  };
+
+  const saveNotes = (e) => {
+    e?.stopPropagation();
+    updateEmail(email.id, { ...email, notes: draftNotes });
+    setEditingNotes(false);
+    setDraftNotes('');
     toast({ title: 'Note saved', status: 'success', duration: 2000, isClosable: true });
   };
 
@@ -97,22 +107,20 @@ export default function EmailCard({ email, onEdit }) {
 
   return (
     <>
-      <Popover trigger="hover" placement="bottom-start" openDelay={300} isLazy>
-        <PopoverTrigger>
-          <Box
-            p={4}
-            borderWidth="1px"
-            borderRadius="lg"
-            bg={email.isChecked ? 'gray.100' : 'white'}
-            borderColor="teal.100"
-            _dark={{ bg: email.isChecked ? 'gray.700' : 'gray.800', borderColor: 'teal.800' }}
-            boxShadow="sm"
-            opacity={email.isChecked ? 0.85 : 1}
-            transition="all 0.2s"
-            cursor="pointer"
-            onClick={handleCardClick}
-            _hover={{ boxShadow: 'md', borderColor: 'teal.200', _dark: { borderColor: 'teal.600' } }}
-          >
+      <Box
+        p={4}
+        borderWidth="1px"
+        borderRadius="lg"
+        bg={email.isChecked ? 'gray.100' : 'white'}
+        borderColor="teal.100"
+        _dark={{ bg: email.isChecked ? 'gray.700' : 'gray.800', borderColor: 'teal.800' }}
+        boxShadow="sm"
+        opacity={email.isChecked ? 0.85 : 1}
+        transition="all 0.2s"
+        cursor="pointer"
+        onClick={handleCardClick}
+        _hover={{ boxShadow: 'md', borderColor: 'teal.200', _dark: { borderColor: 'teal.600' } }}
+      >
         <Flex align="center" gap={3} flexWrap="wrap">
           <Box onClick={(e) => e.stopPropagation()}>
             <Checkbox
@@ -170,7 +178,7 @@ export default function EmailCard({ email, onEdit }) {
             <Button
               size="sm"
               variant="outline"
-              leftIcon={<ViewIcon />}
+              leftIcon={<EditIcon />}
               onClick={(e) => { e.stopPropagation(); onEdit(email); }}
               title="View and edit all details"
             >
@@ -212,47 +220,43 @@ export default function EmailCard({ email, onEdit }) {
             </Collapse>
           </Box>
         )}
-          </Box>
-        </PopoverTrigger>
-        <PopoverContent
-          width="320px"
-          maxW="90vw"
-          _focus={{ outline: 'none' }}
-          bg="linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 50%, #99f6e4 100%)"
-          borderWidth="2px"
-          borderColor="teal.300"
-          _dark={{ bg: 'linear-gradient(135deg, #134e4a 0%, #0f766e 50%, #0d9488 100%)', borderColor: 'teal.500' }}
-          boxShadow="lg"
-        >
-          <PopoverArrow bg="teal.100" _dark={{ bg: 'teal.600' }} />
-          <PopoverHeader
-            fontWeight="semibold"
-            fontSize="sm"
-            color="teal.800"
-            borderBottomWidth="1px"
-            borderColor="teal.200"
-            _dark={{ color: 'teal.100', borderColor: 'teal.600' }}
-          >
+
+        <Box mt={3} onClick={(e) => e.stopPropagation()} borderTopWidth="1px" borderColor="teal.100" _dark={{ borderColor: 'teal.700' }} pt={3}>
+          <Text fontSize="xs" fontWeight="semibold" color="gray.600" _dark={{ color: 'gray.400' }} mb={2}>
             Notes
-          </PopoverHeader>
-          <PopoverBody>
-            <Text fontSize="sm" whiteSpace="pre-wrap" color="teal.900" _dark={{ color: 'teal.50' }}>
-              {email.notes?.trim() || 'No notes yet.'}
-            </Text>
-            <Button
-              size="sm"
-              variant="outline"
-              colorScheme="teal"
-              mt={3}
-              w="full"
-              leftIcon={<ViewIcon />}
-              onClick={(e) => { e.stopPropagation(); onNotesOpen(); }}
-            >
-              Edit note
-            </Button>
-          </PopoverBody>
-        </PopoverContent>
-      </Popover>
+          </Text>
+          {editingNotes ? (
+            <>
+              <Textarea
+                value={draftNotes}
+                onChange={(e) => setDraftNotes(e.target.value)}
+                placeholder="Note down what was discussed or concluded..."
+                size="sm"
+                rows={3}
+                mb={2}
+                focusBorderColor="teal.400"
+              />
+              <Flex gap={2}>
+                <Button size="sm" colorScheme="teal" onClick={saveNotes}>
+                  Save
+                </Button>
+                <Button size="sm" variant="ghost" onClick={cancelEditNotes}>
+                  Cancel
+                </Button>
+              </Flex>
+            </>
+          ) : (
+            <>
+              <Text fontSize="sm" whiteSpace="pre-wrap" color="gray.700" _dark={{ color: 'gray.300' }}>
+                {email.notes?.trim() || 'No notes yet.'}
+              </Text>
+              <Button size="xs" variant="link" colorScheme="teal" mt={1} leftIcon={<EditIcon />} onClick={startEditNotes}>
+                Edit note
+              </Button>
+            </>
+          )}
+        </Box>
+      </Box>
 
       <AlertDialog
         isOpen={isDeleteOpen}
@@ -283,13 +287,6 @@ export default function EmailCard({ email, onEdit }) {
         to={email.email || ''}
         subject={email.emailHeader || ''}
         body={email.emailContent || ''}
-      />
-      <EditNotesModal
-        isOpen={isNotesOpen}
-        onClose={onNotesClose}
-        contactName={email.hrName}
-        notes={email.notes || ''}
-        onSave={handleSaveNotes}
       />
     </>
   );

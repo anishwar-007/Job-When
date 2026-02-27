@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Alert,
   AlertDescription,
@@ -6,25 +6,33 @@ import {
   AlertTitle,
   Box,
   Button,
+  Checkbox,
   Container,
   Heading,
   HStack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItemOption,
   Spinner,
   VStack,
 } from '@chakra-ui/react';
 import { useDisclosure } from '@chakra-ui/react';
+import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useEmailTracker } from '../context/EmailTrackerContext';
 import EmailForm from '../components/EmailForm';
 import EmailList from '../components/EmailList';
 import JobIdManager from '../components/JobIdManager';
+import { DEFAULT_STATUSES } from '../constants/statuses';
 
-const COLUMN_OPTIONS = [1, 2, 3, 4];
+const COLUMN_OPTIONS = [1, 2, 3];
 
 export default function TrackerPage() {
   const { emails, loading, error, clearError } = useEmailTracker();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [editingEmail, setEditingEmail] = useState(null);
   const [columns, setColumns] = useState(2);
+  const [statusFilter, setStatusFilter] = useState([]);
 
   const handleAdd = () => {
     setEditingEmail(null);
@@ -39,6 +47,17 @@ export default function TrackerPage() {
   const handleCloseModal = () => {
     setEditingEmail(null);
     onClose();
+  };
+
+  const filteredEmails = useMemo(() => {
+    if (!statusFilter.length) return emails;
+    return emails.filter((e) => statusFilter.includes(e.status));
+  }, [emails, statusFilter]);
+
+  const toggleStatusFilter = (status) => {
+    setStatusFilter((prev) =>
+      prev.includes(status) ? prev.filter((s) => s !== status) : [...prev, status]
+    );
   };
 
   if (loading) {
@@ -102,11 +121,38 @@ export default function TrackerPage() {
                 {n}
               </Button>
             ))}
+            <Box as="span" fontSize="sm" fontWeight="medium" color="gray.600" _dark={{ color: 'gray.400' }} ml={4}>
+              Filter by status:
+            </Box>
+            <Menu closeOnSelect={false}>
+              <MenuButton as={Button} size="sm" variant="outline" colorScheme="teal" rightIcon={<ChevronDownIcon />}>
+                {statusFilter.length ? `${statusFilter.length} selected` : 'All statuses'}
+              </MenuButton>
+              <MenuList minW="220px">
+                {DEFAULT_STATUSES.map((s) => (
+                  <MenuItemOption
+                    key={s}
+                    value={s}
+                    onClick={() => toggleStatusFilter(s)}
+                    bg={statusFilter.includes(s) ? 'teal.50' : undefined}
+                    _dark={{ bg: statusFilter.includes(s) ? 'teal.900' : undefined }}
+                  >
+                    <Checkbox isChecked={statusFilter.includes(s)} pointerEvents="none" mr={2} />
+                    {s}
+                  </MenuItemOption>
+                ))}
+              </MenuList>
+            </Menu>
+            {statusFilter.length > 0 && (
+              <Button size="sm" variant="ghost" onClick={() => setStatusFilter([])}>
+                Clear filter
+              </Button>
+            )}
           </HStack>
 
           <JobIdManager />
 
-          <EmailList emails={emails} onEdit={handleEdit} columns={columns} />
+          <EmailList emails={filteredEmails} onEdit={handleEdit} columns={columns} />
         </VStack>
       </Container>
 

@@ -7,4 +7,6 @@ export const DEFAULT_STATUSES = [
   'Offer',
   'Rejected',
   'No Response',
+  'Not interested anymore',
+  'Job Closed',
 ];
