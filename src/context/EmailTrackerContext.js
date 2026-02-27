@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { useAuth } from './AuthContext';
 import * as jobsService from '../services/jobsService';
 import * as trackersService from '../services/trackersService';
+import * as hrContactsService from '../services/hrContactsService';
 
 const EmailTrackerContext = createContext(null);
 
@@ -53,7 +54,10 @@ export function EmailTrackerProvider({ children }) {
         setError(err.message);
         return false;
       }
-      if (data) setEmails((prev) => [data, ...prev]);
+      if (data) {
+        setEmails((prev) => [data, ...prev]);
+        await hrContactsService.ensureHrContactFromTracker(data);
+      }
       return true;
     },
     []
@@ -68,7 +72,10 @@ export function EmailTrackerProvider({ children }) {
       setError(err.message);
       return false;
     }
-    if (data) setEmails((prev) => prev.map((e) => (e.id === id ? data : e)));
+    if (data) {
+      setEmails((prev) => prev.map((e) => (e.id === id ? data : e)));
+      await hrContactsService.ensureHrContactFromTracker(data);
+    }
     return true;
   }, [emails]);
 

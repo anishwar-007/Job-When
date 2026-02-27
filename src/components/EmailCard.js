@@ -120,9 +120,11 @@ export default function EmailCard({ email, onEdit }) {
         cursor="pointer"
         onClick={handleCardClick}
         _hover={{ boxShadow: 'md', borderColor: 'teal.200', _dark: { borderColor: 'teal.600' } }}
+        overflow="hidden"
       >
-        <Flex align="center" gap={3} flexWrap="wrap">
-          <Box onClick={(e) => e.stopPropagation()}>
+        {/* Row 1: Checkbox + Name/Company */}
+        <Flex align="flex-start" gap={3}>
+          <Box onClick={(e) => e.stopPropagation()} flexShrink={0} pt={0.5}>
             <Checkbox
               isChecked={email.isChecked}
               onChange={() => toggleCheck(email.id)}
@@ -131,13 +133,13 @@ export default function EmailCard({ email, onEdit }) {
             />
           </Box>
           <Box flex="1" minW="0">
-            <Text fontWeight="bold" fontSize="md" noOfLines={1}>
+            <Text fontWeight="bold" fontSize="md" wordBreak="break-word">
               {email.hrName}
             </Text>
-            <Text fontSize="sm" color="gray.600" _dark={{ color: 'gray.400' }} noOfLines={1}>
+            <Text fontSize="sm" color="gray.600" _dark={{ color: 'gray.400' }} mt={0.5} wordBreak="break-word">
               {email.companyName}
               {email.jobId && primaryLabel && (
-                <Box as="span" ml={1} display="inline-flex" alignItems="center">
+                <Box as="span" ml={1} display="inline-flex" alignItems="center" verticalAlign="middle">
                   <Tag size="sm" colorScheme={linkJob ? 'blue' : 'teal'} ml={1}>
                     {linkJob ? (
                       <Link href={jobValue} isExternal _hover={{ textDecoration: 'none', opacity: 0.9 }}>
@@ -151,46 +153,39 @@ export default function EmailCard({ email, onEdit }) {
               )}
             </Text>
           </Box>
-          <Box onClick={(e) => e.stopPropagation()}>
-            <StatusSelect emailId={email.id} value={email.status} />
-          </Box>
-          <Flex gap={2} shrink={0} onClick={(e) => e.stopPropagation()}>
-            {email.status === 'Mail ready' && (
-              <Button
-                size="sm"
-                colorScheme="teal"
-                leftIcon={<EmailIcon />}
-                onClick={handleSendMail}
-                title="Open default mail app to send email to HR"
-              >
-                Send the mail
-              </Button>
-            )}
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<CopyIcon />}
-              onClick={handleCopy}
-              title="Copy HR name, company, job link, email as JSON"
-            >
-              Copy
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              leftIcon={<EditIcon />}
-              onClick={(e) => { e.stopPropagation(); onEdit(email); }}
-              title="View and edit all details"
-            >
-              Details
-            </Button>
-            <Button size="sm" colorScheme="red" variant="outline" onClick={onDeleteOpen}>
-              Delete
-            </Button>
-          </Flex>
         </Flex>
+
+        {/* Row 2: Status + Send */}
+        <Flex mt={3} gap={2} align="center" onClick={(e) => e.stopPropagation()} flexWrap="wrap">
+          <StatusSelect emailId={email.id} value={email.status} />
+          {email.status === 'Mail ready' && (
+            <Button
+              size="xs"
+              colorScheme="teal"
+              leftIcon={<EmailIcon />}
+              onClick={handleSendMail}
+            >
+              Send
+            </Button>
+          )}
+        </Flex>
+
+        {/* Row 3: Action buttons */}
+        <Flex mt={2} gap={2} onClick={(e) => e.stopPropagation()} flexWrap="wrap">
+          <Button size="xs" variant="outline" leftIcon={<CopyIcon />} onClick={handleCopy}>
+            Copy
+          </Button>
+          <Button size="xs" variant="outline" leftIcon={<EditIcon />} onClick={(e) => { e.stopPropagation(); onEdit(email); }}>
+            Details
+          </Button>
+          <Button size="xs" colorScheme="red" variant="outline" onClick={onDeleteOpen}>
+            Delete
+          </Button>
+        </Flex>
+
+        {/* Contact info */}
         {(email.phone || email.email || email.hasEmail === false) && (
-          <Text fontSize="xs" mt={2} color="gray.500" _dark={{ color: 'gray.500' }}>
+          <Text fontSize="xs" mt={2} color="gray.500" _dark={{ color: 'gray.500' }} wordBreak="break-all">
             {[email.hasEmail === false ? 'No email' : email.email || null, email.phone]
               .filter(Boolean)
               .join(' · ')}

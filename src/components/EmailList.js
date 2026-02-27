@@ -24,7 +24,7 @@ export default function EmailList({ emails, onEdit, columns = 1 }) {
   }
 
   return (
-    <SimpleGrid columns={{ base: 1, md: columns }} spacing={3}>
+    <SimpleGrid columns={{ base: 1, md: columns }} spacing={4}>
       {emails.map((email) => (
         <EmailCard key={email.id} email={email} onEdit={onEdit} />
       ))}
