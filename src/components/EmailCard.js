@@ -17,6 +17,12 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useToast,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverArrow,
 } from '@chakra-ui/react';
 import { ViewIcon, CopyIcon, EmailIcon } from '@chakra-ui/icons';
 import StatusSelect from './StatusSelect';
@@ -84,18 +90,20 @@ export default function EmailCard({ email, onEdit }) {
 
   return (
     <>
-      <Box
-        p={4}
-        borderWidth="1px"
-        borderRadius="md"
-        bg={email.isChecked ? 'gray.100' : 'gray.50'}
-        _dark={{ bg: email.isChecked ? 'gray.700' : 'gray.800' }}
-        opacity={email.isChecked ? 0.85 : 1}
-        transition="opacity 0.2s"
-        cursor="pointer"
-        onClick={handleCardClick}
-        _hover={{ shadow: 'md' }}
-      >
+      <Popover trigger="hover" placement="bottom-start" openDelay={300} isLazy>
+        <PopoverTrigger>
+          <Box
+            p={4}
+            borderWidth="1px"
+            borderRadius="md"
+            bg={email.isChecked ? 'gray.100' : 'gray.50'}
+            _dark={{ bg: email.isChecked ? 'gray.700' : 'gray.800' }}
+            opacity={email.isChecked ? 0.85 : 1}
+            transition="opacity 0.2s"
+            cursor="pointer"
+            onClick={handleCardClick}
+            _hover={{ shadow: 'md' }}
+          >
         <Flex align="center" gap={3} flexWrap="wrap">
           <Box onClick={(e) => e.stopPropagation()}>
             <Checkbox
@@ -195,7 +203,31 @@ export default function EmailCard({ email, onEdit }) {
             </Collapse>
           </Box>
         )}
-      </Box>
+          </Box>
+        </PopoverTrigger>
+        <PopoverContent width="320px" maxW="90vw" _focus={{ outline: 'none' }}>
+          <PopoverArrow />
+          <PopoverHeader fontWeight="semibold" fontSize="sm">
+            Notes
+          </PopoverHeader>
+          <PopoverBody>
+            <Text fontSize="sm" whiteSpace="pre-wrap" color="gray.700" _dark={{ color: 'gray.300' }}>
+              {email.notes?.trim() || 'No notes yet.'}
+            </Text>
+            <Button
+              size="sm"
+              variant="outline"
+              colorScheme="teal"
+              mt={3}
+              w="full"
+              leftIcon={<ViewIcon />}
+              onClick={(e) => { e.stopPropagation(); onEdit(email); }}
+            >
+              Edit notes & details
+            </Button>
+          </PopoverBody>
+        </PopoverContent>
+      </Popover>
 
       <AlertDialog
         isOpen={isDeleteOpen}

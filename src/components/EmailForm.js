@@ -28,6 +28,7 @@ const emptyRecord = {
   jobId: '',
   emailHeader: '',
   emailContent: '',
+  notes: '',
   status: 'Just added',
 };
 
@@ -47,6 +48,7 @@ export default function EmailForm({ isOpen, onClose, editRecord = null }) {
         jobId: editRecord.jobId || '',
         emailHeader: editRecord.emailHeader || '',
         emailContent: editRecord.emailContent || '',
+        notes: editRecord.notes || '',
         status: editRecord.status || 'Just added',
       });
     } else {
@@ -172,6 +174,15 @@ export default function EmailForm({ isOpen, onClose, editRecord = null }) {
                   onChange={(e) => handleChange('emailContent', e.target.value)}
                   placeholder="Paste or type the email you sent to HR..."
                   rows={6}
+                />
+              </FormControl>
+              <FormControl>
+                <FormLabel>Notes (e.g. call conclusion)</FormLabel>
+                <Textarea
+                  value={form.notes}
+                  onChange={(e) => handleChange('notes', e.target.value)}
+                  placeholder="Note down what was discussed or concluded on a call..."
+                  rows={4}
                 />
               </FormControl>
             </VStack>
