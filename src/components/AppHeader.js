@@ -15,9 +15,8 @@ export default function AppHeader() {
     <Box
       borderBottomWidth="2px"
       borderColor="teal.200"
-      _dark={{ borderColor: 'teal.700' }}
       bg="linear-gradient(90deg, #ffffff 0%, #f0fdfa 100%)"
-      _dark={{ bg: 'linear-gradient(90deg, #1e293b 0%, #0f766e 50%, #134e4a 100%)' }}
+      _dark={{ borderColor: 'teal.700', bg: 'linear-gradient(90deg, #1e293b 0%, #0f766e 50%, #134e4a 100%)' }}
       py={3}
       boxShadow="sm"
     >

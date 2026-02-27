@@ -28,10 +28,9 @@ export default function EditNotesModal({ isOpen, onClose, contactName = '', note
       <ModalOverlay />
       <ModalContent
         bg="white"
-        _dark={{ bg: 'gray.800' }}
         borderWidth="1px"
         borderColor="teal.200"
-        _dark={{ borderColor: 'teal.600' }}
+        _dark={{ bg: 'gray.800', borderColor: 'teal.600' }}
         boxShadow="xl"
       >
         <ModalHeader>Edit note {contactName ? `— ${contactName}` : ''}</ModalHeader>

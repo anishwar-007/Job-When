@@ -96,9 +96,8 @@ export default function JobsPage() {
             borderRadius="lg"
             borderStyle="dashed"
             borderColor="teal.200"
-            _dark={{ borderColor: 'teal.600' }}
             bg="white"
-            _dark={{ bg: 'gray.800' }}
+            _dark={{ borderColor: 'teal.600', bg: 'gray.800' }}
             boxShadow="sm"
           >
             <Text color="gray.500" _dark={{ color: 'gray.400' }}>
@@ -162,9 +161,8 @@ export default function JobsPage() {
                   borderWidth="1px"
                   borderRadius="lg"
                   bg="white"
-                  _dark={{ bg: 'gray.800' }}
                   borderColor="teal.100"
-                  _dark={{ borderColor: 'teal.800' }}
+                  _dark={{ bg: 'gray.800', borderColor: 'teal.800' }}
                   boxShadow="sm"
                   _hover={{ boxShadow: 'md', borderColor: 'teal.200', _dark: { borderColor: 'teal.600' } }}
                   transition="all 0.2s"

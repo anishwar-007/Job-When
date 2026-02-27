@@ -12,9 +12,8 @@ export default function EmailList({ emails, onEdit, columns = 1 }) {
         borderRadius="lg"
         borderStyle="dashed"
         borderColor="teal.200"
-        _dark={{ borderColor: 'teal.600' }}
         bg="white"
-        _dark={{ bg: 'gray.800' }}
+        _dark={{ borderColor: 'teal.600', bg: 'gray.800' }}
         boxShadow="sm"
       >
         <Text color="gray.600" _dark={{ color: 'gray.400' }}>

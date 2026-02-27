@@ -61,9 +61,8 @@ export default function JobIdManager() {
           borderWidth="1px"
           borderRadius="lg"
           borderColor="teal.100"
-          _dark={{ borderColor: 'teal.800' }}
           bg="white"
-          _dark={{ bg: 'gray.800' }}
+          _dark={{ borderColor: 'teal.800', bg: 'gray.800' }}
           boxShadow="sm"
         >
           <Heading size="sm" mb={3}>
