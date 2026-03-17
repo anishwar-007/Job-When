@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from './AuthContext';
 import * as jobsService from '../services/jobsService';
 import * as trackersService from '../services/trackersService';
@@ -8,10 +8,12 @@ const EmailTrackerContext = createContext(null);
 
 export function EmailTrackerProvider({ children }) {
   const { user } = useAuth();
+  const userId = user?.id;
   const [emails, setEmails] = useState([]);
   const [jobIds, setJobIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const loadedForUser = useRef(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -36,13 +38,17 @@ export function EmailTrackerProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    if (user) loadData();
-    else {
+    if (userId) {
+      if (loadedForUser.current === userId) return;
+      loadedForUser.current = userId;
+      loadData();
+    } else {
+      loadedForUser.current = null;
       setEmails([]);
       setJobIds([]);
       setLoading(false);
     }
-  }, [user, loadData]);
+  }, [userId, loadData]);
 
   const addEmail = useCallback(
     async (record) => {
